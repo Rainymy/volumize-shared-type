@@ -84,3 +84,12 @@ pub struct AudioVolume {
     pub current: VolumePercent,
     pub muted: bool,
 }
+
+impl AudioVolume {
+    pub fn new(volume: VolumePercent) -> Self {
+        Self {
+            current: volume,
+            muted: false,
+        }
+    }
+}
