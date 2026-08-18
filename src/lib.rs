@@ -1,6 +1,8 @@
-// #![allow(dead_code)]
+#![no_std]
+extern crate alloc;
+
+use alloc::string::String;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 pub type VolumePercent = f32;
 pub type AppIdentifier = u32;
@@ -55,7 +57,7 @@ pub enum SessionDirection {
 pub struct ProcessInfo {
     pub id: AppIdentifier,
     pub name: String,
-    pub path: Option<PathBuf>,
+    pub path: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
