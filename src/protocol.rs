@@ -1,6 +1,6 @@
-use alloc::{vec::Vec};
+use alloc::vec::Vec;
 use embassy_usb::{
-    class::cdc_acm::CdcAcmClass,
+    class::cdc_acm::Receiver,
     driver::{Driver, EndpointError},
 };
 use serde::{Deserialize, Serialize};
@@ -65,7 +65,7 @@ pub enum Envelope {
 }
 
 pub async fn read_frame<'a>(
-    class: &mut CdcAcmClass<'a, impl Driver<'a>>,
+    class: &mut Receiver<'a, impl Driver<'a>>,
 ) -> Result<Vec<u8>, EndpointError> {
     use alloc::vec;
 
@@ -125,8 +125,7 @@ impl RawFrame {
 }
 
 pub fn encode_frame(envelope: &Envelope) -> Result<RawFrame, String> {
-    use alloc::{string::ToString};
-
+    use alloc::string::ToString;
 
     let mut buffer = Vec::new();
     ciborium::into_writer(&envelope, &mut buffer).map_err(|e| e.to_string())?;
