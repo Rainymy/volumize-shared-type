@@ -1,4 +1,6 @@
+use alloc::string::String;
 use alloc::vec::Vec;
+
 use embassy_usb::{
     class::cdc_acm::Receiver,
     driver::{Driver, EndpointError},
@@ -32,8 +34,6 @@ pub enum Command {
     GetPlaybackDevices,
 }
 
-use alloc::string::String;
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Response {
     Volume {
@@ -47,7 +47,7 @@ pub enum Response {
     Application(AudioApplication),
     Icon {
         app_id: AppIdentifier,
-        data: Vec<u8>,
+        data: String,
     },
     DeviceList(Vec<AudioDevice>),
     Error {
