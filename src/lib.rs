@@ -5,6 +5,7 @@ mod enums;
 mod update;
 
 pub mod protocol;
+pub mod reader;
 pub use enums::*;
 pub use update::*;
 
