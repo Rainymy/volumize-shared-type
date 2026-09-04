@@ -4,6 +4,7 @@ extern crate alloc;
 mod enums;
 mod update;
 
+pub mod info;
 pub mod protocol;
 pub mod reader;
 pub use enums::*;
