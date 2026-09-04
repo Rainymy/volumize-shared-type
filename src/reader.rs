@@ -65,9 +65,11 @@ mod std_impl {
 #[cfg(feature = "tokio")]
 mod tokio_impl {
     use super::PacketReader;
-    use tokio::io::AsyncRead;
 
-    impl<R: AsyncRead> PacketReader for R {
+    use core::marker::Unpin;
+    use tokio::io::AsyncReadExt;
+
+    impl<R: AsyncReadExt + Unpin> PacketReader for R {
         type Error = tokio::io::Error;
 
         fn max_packet_size(&self) -> u16 {
