@@ -8,6 +8,9 @@ pub mod protocol;
 pub mod reader;
 pub use enums::*;
 pub use update::*;
+mod reader_impl;
+
+pub use reader::PacketReader;
 
 use alloc::string::String;
 use serde::{Deserialize, Serialize};

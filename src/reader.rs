@@ -21,67 +21,6 @@ pub trait PacketReader {
     fn read_packet(&mut self, buf: &mut [u8]) -> impl Future<Output = Result<usize, Self::Error>>;
 }
 
-#[cfg(feature = "usb")]
-mod usb_impl {
-    use super::PacketReader;
-    use embassy_usb::{
-        class::cdc_acm::Receiver,
-        driver::{Driver, EndpointError},
-    };
-
-    impl<'a, D: Driver<'a>> PacketReader for Receiver<'a, D> {
-        type Error = EndpointError;
-
-        fn max_packet_size(&self) -> u16 {
-            Receiver::max_packet_size(self)
-        }
-
-        async fn read_packet(&mut self, buf: &mut [u8]) -> Result<usize, EndpointError> {
-            Receiver::read_packet(self, buf).await
-        }
-    }
-}
-
-#[cfg(feature = "std")]
-mod std_impl {
-    use super::PacketReader;
-    use std::io::Read;
-
-    impl<R: Read> PacketReader for R {
-        type Error = std::io::Error;
-
-        fn max_packet_size(&self) -> u16 {
-            1024
-        }
-
-        async fn read_packet(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
-            // Unsure if this is the correct way to read within async context
-            // TODO: Read into the buffer asynchronously
-            self.read(buf)
-        }
-    }
-}
-
-#[cfg(feature = "tokio")]
-mod tokio_impl {
-    use super::PacketReader;
-
-    use core::marker::Unpin;
-    use tokio::io::AsyncReadExt;
-
-    impl<R: AsyncReadExt + Unpin> PacketReader for R {
-        type Error = tokio::io::Error;
-
-        fn max_packet_size(&self) -> u16 {
-            1024
-        }
-
-        async fn read_packet(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
-            self.read(buf).await
-        }
-    }
-}
-
 use alloc::fmt;
 impl<E: fmt::Display> fmt::Display for FrameError<E> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
