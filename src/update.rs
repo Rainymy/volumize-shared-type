@@ -31,3 +31,33 @@ pub struct UpdateChange {
     pub id: Identifier,
     pub change: ChangeType,
 }
+
+impl UpdateChange {
+    pub fn volume_change(id: Identifier, volume: f32, mute: bool) -> Self {
+        Self {
+            id: id,
+            change: ChangeType::AudioVolume { volume, mute },
+        }
+    }
+
+    pub fn app_icon_change(id: Identifier, path: String) -> Self {
+        Self {
+            id: id,
+            change: ChangeType::IconPathChange { path },
+        }
+    }
+
+    pub fn app_name_change(id: Identifier, name: String) -> Self {
+        Self {
+            id: id,
+            change: ChangeType::NameChange { name },
+        }
+    }
+
+    pub fn app_state_change(id: Identifier, state: EntityState) -> Self {
+        Self {
+            id: id,
+            change: ChangeType::StateChange { state },
+        }
+    }
+}
