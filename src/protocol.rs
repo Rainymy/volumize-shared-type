@@ -1,9 +1,18 @@
+use core::sync::atomic::{AtomicU64, Ordering};
+
 use alloc::string::String;
 use alloc::vec::Vec;
 
 use serde::{Deserialize, Serialize};
 
 use super::*;
+
+pub type RequestId = u64;
+
+static NEXT_REQUEST_ID: AtomicU64 = AtomicU64::new(1);
+pub fn next_request_id() -> RequestId {
+    NEXT_REQUEST_ID.fetch_add(1, Ordering::Relaxed)
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Command {
@@ -43,20 +52,32 @@ pub enum Response {
     Application(AudioApplication),
     Icon {
         app_id: AppIdentifier,
-        data: String,
+        data: Vec<u8>,
     },
     DeviceList(Vec<AudioDevice>),
     Error {
-        request: Command,
         message: String,
     },
+    ACK,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CommandRequest {
+    pub id: RequestId,
+    pub command: Command,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CommandResponse {
+    pub id: RequestId,
+    pub response: Response,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", content = "content", rename_all = "lowercase")]
 pub enum Envelope {
-    Command(Command),
-    Response(Response),
+    Command(CommandRequest),
+    Response(CommandResponse),
     Event(UpdateChange),
 }
 
