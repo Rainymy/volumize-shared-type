@@ -21,6 +21,7 @@ pub type AppIdentifier = u32;
 pub type DeviceIdentifier = String;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct ProcessInfo {
     pub id: AppIdentifier,
     pub name: String,
@@ -28,6 +29,7 @@ pub struct ProcessInfo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct AudioApplication {
     pub process: ProcessInfo,
     pub session_type: SessionType,
@@ -37,6 +39,7 @@ pub struct AudioApplication {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct AudioDevice {
     pub id: DeviceIdentifier,
     pub name: String,
@@ -47,6 +50,7 @@ pub struct AudioDevice {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct AudioVolume {
     pub current: VolumePercent,
     pub muted: bool,

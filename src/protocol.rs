@@ -1,4 +1,4 @@
-use core::sync::atomic::{AtomicU64, Ordering};
+use core::sync::atomic::{AtomicU32, Ordering};
 
 use alloc::string::String;
 use alloc::vec::Vec;
@@ -7,14 +7,16 @@ use serde::{Deserialize, Serialize};
 
 use super::*;
 
-pub type RequestId = u64;
+pub type RequestId = u32;
 
-static NEXT_REQUEST_ID: AtomicU64 = AtomicU64::new(1);
+static NEXT_REQUEST_ID: AtomicU32 = AtomicU32::new(1);
 pub fn next_request_id() -> RequestId {
     NEXT_REQUEST_ID.fetch_add(1, Ordering::Relaxed)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
+#[serde(tag = "type", content = "data", rename_all = "snake_case")]
 pub enum Command {
     GetVolume {
         id: Identifier,
@@ -28,30 +30,32 @@ pub enum Command {
         mute: bool,
     },
     GetApplications {
-        device_id: DeviceIdentifier,
+        id: DeviceIdentifier,
     },
     GetApplication {
-        app_id: AppIdentifier,
+        id: AppIdentifier,
     },
     GetIcon {
-        app_id: AppIdentifier,
+        id: AppIdentifier,
     },
     GetPlaybackDevices,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
+#[serde(tag = "type", content = "data", rename_all = "snake_case")]
 pub enum Response {
     Volume {
         id: Identifier,
         volume: AudioVolume,
     },
     ApplicationList {
-        device_id: DeviceIdentifier,
+        id: DeviceIdentifier,
         apps: Vec<AppIdentifier>,
     },
     Application(AudioApplication),
     Icon {
-        app_id: AppIdentifier,
+        id: AppIdentifier,
         data: Vec<u8>,
     },
     DeviceList(Vec<AudioDevice>),
@@ -62,12 +66,15 @@ pub enum Response {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct CommandRequest {
     pub id: RequestId,
     pub command: Command,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub struct CommandResponse {
     pub id: RequestId,
     pub response: Response,

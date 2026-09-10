@@ -1,9 +1,11 @@
-use alloc::string::String;
 use serde::{Deserialize, Serialize};
 
 use super::{AppIdentifier, DeviceIdentifier};
 
+use alloc::string::String;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 #[serde(tag = "type", content = "content", rename_all = "lowercase")]
 pub enum Identifier {
     App(AppIdentifier),
@@ -12,6 +14,7 @@ pub enum Identifier {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum ChangeType {
     AudioVolume { volume: f32, mute: bool },
     IconPathChange { path: String },
@@ -20,6 +23,7 @@ pub enum ChangeType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 #[serde(rename_all = "lowercase")]
 pub enum EntityState {
     Disconnect,
@@ -27,6 +31,7 @@ pub enum EntityState {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct UpdateChange {
     pub id: Identifier,
     pub change: ChangeType,

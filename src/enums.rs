@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum SessionType {
     Application,
     Device,
@@ -9,6 +10,7 @@ pub enum SessionType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum SessionDirection {
     Render,
     Capture,
