@@ -36,7 +36,7 @@ pub enum Command {
         id: AppIdentifier,
     },
     GetIcon {
-        id: AppIdentifier,
+        id: Identifier,
     },
     GetPlaybackDevices,
 }
