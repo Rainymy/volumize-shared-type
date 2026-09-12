@@ -55,7 +55,7 @@ pub enum Response {
     },
     Application(AudioApplication),
     Icon {
-        id: AppIdentifier,
+        id: Identifier,
         data: Vec<u8>,
     },
     DeviceList(Vec<AudioDevice>),
