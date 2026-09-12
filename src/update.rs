@@ -32,6 +32,22 @@ pub enum EntityState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "bindings", derive(specta::Type))]
+pub struct UpdateChangeEvent {
+    pub event: String,
+    payload: UpdateChange,
+}
+
+impl UpdateChangeEvent {
+    pub fn new(event: impl Into<String>, payload: &UpdateChange) -> Self {
+        Self {
+            event: event.into(),
+            payload: payload.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct UpdateChange {
     pub id: Identifier,
     pub change: ChangeType,
