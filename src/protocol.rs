@@ -104,7 +104,7 @@ impl RawFrame {
     }
 
     pub fn build(self) -> Vec<u8> {
-        let buffer_len = self.0.len().to_le_bytes();
+        let buffer_len = (self.0.len() as u16).to_le_bytes();
         let mut buffer = Vec::with_capacity(buffer_len.len() + self.0.len());
 
         buffer.extend_from_slice(&buffer_len);
