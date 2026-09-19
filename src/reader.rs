@@ -1,3 +1,4 @@
+use alloc::fmt;
 use alloc::vec;
 use alloc::vec::Vec;
 
@@ -21,7 +22,6 @@ pub trait PacketReader {
     fn read_packet(&mut self, buf: &mut [u8]) -> impl Future<Output = Result<usize, Self::Error>>;
 }
 
-use alloc::fmt;
 impl<E: fmt::Display> fmt::Display for FrameError<E> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -34,7 +34,7 @@ impl<E: fmt::Display> fmt::Display for FrameError<E> {
 }
 
 pub async fn read_frame<R: PacketReader>(reader: &mut R) -> Result<Vec<u8>, FrameError<R::Error>> {
-    const MAX_FRAME_LEN: usize = 1024;
+    use crate::info::MAX_FRAME_LEN;
     const HEADER_LEN: usize = 2;
 
     let mut packet_buf = vec![0u8; reader.max_packet_size() as usize];
